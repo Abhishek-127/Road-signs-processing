@@ -49,6 +49,8 @@ def getMin(R,G,B):
     return temp
 
 
+
+
 def getRedSign(fname):
     # to run code in terminal:
     # python getRGBVals.py imagename.jpg
@@ -90,10 +92,12 @@ def getYellowSign(fname):
     #image = imread_colour(sys.argv[1])
     blur = cv2.GaussianBlur(image, (21, 21), 0)
     #blur = image
-    lower = [15,0 ,0] # still need rgb , 
-    upper = [36, 255, 255]
+   
+    lower =  [15,0,0 ] # still need rgb , 
+    upper = [36,255,255]
 
-    hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
+
+    hsv = cv2.cvtColor(blur, cv2.COLOR_RGB2HSV)
 
     lower = np.array(lower, dtype="uint8")
     upper = np.array(upper, dtype="uint8")
@@ -101,6 +105,9 @@ def getYellowSign(fname):
     mask = cv2.inRange(hsv, lower, upper)
     cv2.imshow('mask for hsv spectrum', mask)
     cv2.waitKey(0)
+
+
+    
     result = cv2.bitwise_and(image, image, mask=mask)
     red = cv2.countNonZero(mask)
     s = mask.shape[0] * mask.shape[1]
@@ -123,13 +130,16 @@ def getWhiteSign(fname):
     #image = imread_colour(sys.argv[1])
     blur = cv2.GaussianBlur(image, (21, 21), 0)
     #blur = image
-    lower = [0,0 ,240] # still need rgb , 
-    upper = [255, 15, 255]
+
+  
+   
+    lower = [0,0,0] # still need rgb , 
+    upper = [255,255,255]
 
     hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
-
-    lower = np.array(lower, dtype="uint8")
-    upper = np.array(upper, dtype="uint8")
+    
+    lower = np.array(lower, dtype=np.uint8)
+    upper = np.array(upper, dtype=np.uint8)
    # keep this tagged.
     mask = cv2.inRange(hsv, lower, upper)
     cv2.imshow('mask for hsv spectrum', mask)
@@ -147,7 +157,7 @@ def getWhiteSign(fname):
     out = cv2.countNonZero(output.flatten())
     size = image.shape[0] * image.shape[1]
     percentage = (float(out)/float(size)) * 100 
-    cv2.imwrite('outputYellow.jpg', output)
+    cv2.imwrite('outputWhite.jpg', output)
 
 def getBlueSign(fname):
     # to run code in terminal:
@@ -180,9 +190,11 @@ def getBlueSign(fname):
     out = cv2.countNonZero(output.flatten())
     size = image.shape[0] * image.shape[1]
     percentage = (float(out)/float(size)) * 100 
-    cv2.imwrite('outputYellow.jpg', output)
+    cv2.imwrite('outputBlue.jpg', output)
 def main():
-    getBlueSign(sys.argv[1])
+    
+    # you can choose what you want.
+    #getYellowSign(sys.argv[1])
 
 
 if __name__ == '__main__':
