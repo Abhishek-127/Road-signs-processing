@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-img = cv2.imread("images/tes3.jpg", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("yieldPrototype.png", cv2.IMREAD_GRAYSCALE)
 _, threshold = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
 contours, _= cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
