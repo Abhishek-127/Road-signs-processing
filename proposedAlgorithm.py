@@ -57,11 +57,6 @@ def image_clustering(image):
     A = Z[label.ravel()==0]
     B = Z[label.ravel()==1]
     C = Z[label.ravel()==2]
-    # plt.scatter(A[:,0],A[:,1])
-    # plt.scatter(B[:,0],B[:,1],c = 'r')
-    # plt.scatter(center[:,0],center[:,1],s = 80,c = 'y', marker = 's')
-    # plt.xlabel('Height'),plt.ylabel('Weight')
-    # plt.show()
 
     res = center[label.flatten()]
     res2 = res.reshape((clustered_image.shape))
@@ -94,6 +89,13 @@ def plot_clustered_data(img):
     plt.xlabel('Height'),plt.ylabel('Weight')
     plt.show()
 
+
+def calculate_non_zero(output, original_image):
+    num_non_zero = cv2.countNonZero(output.flatten())
+    height, width = get_dim(original_image)
+    size = height * width
+    percentage = float(float(num_non_zero)/float(size))
+    return percentage
 
 def check_aspect_ratio(image):
     height = image.shape[0]
@@ -146,14 +148,44 @@ def find_yellow(image):
         (np.array([21, 100, 75]), np.array([25, 255, 255])),
         (np.array([1, 75, 75]), np.array([9, 225, 225]))
     )
+    # lower_yellow = np.array([15, 75, 75])
+    # upper_yellow = np.array([36, 225, 225])
+    lower_yellow = np.array([20,100,100])
+    upper_yellow = np.array([30,255,255])
+    hsv = bgr_to_hsv(image)
     # this code is in a for loop and loops over the above HSV color ranges
-    mask = cv2.inRange(hsv, colors[0], colors[1])
-    out = cv2.bitwise_and(im, im, mask=mask)
+    mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    out = cv2.bitwise_and(hsv, hsv, mask=mask)
     blur = cv2.blur(out, (5, 5), 0)
     imgray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(imgray, 0, 255, cv2.THRESH_OTSU)
 
-    heir, contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    heir, contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.imshow('yellow', out)
+    cv2.waitKey(0)
+    return out
+
+def fuzzy_yellow(image):
+    hsv_image = bgr_to_hsv(image)
+    new_image = hsv_image.copy()
+    height, width = get_dim(image)
+    for x in range(0, height):
+        for y in range(0, width):
+            hue = hsv_image[x, y][0]
+            sat = hsv_image[x, y][1]
+            if(20 < hue < 30):
+                new_image[x, y] = hsv_image[x,y]
+            else:
+                new_image[x, y] = [0, 0, 0]
+
+            if(200 < sat < 255):
+                new_image[x, y] = hsv_image[x, y]
+            else:
+                new_image[x, y] = [0, 0, 0]
+    cv2.imshow('yellow image', new_image)
+    cv2.waitKey(0)
+    percentage_yellow = calculate_non_zero(new_image, image)
+    return new_image, percentage_yellow
 
 def bgr_to_hsv(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -171,14 +203,19 @@ def fuzzy_red(image):
             hue = hsv_image[x, y][0]
             sat = hsv_image[x,y][1]
             # 173
-            if(hue < 173): 
+            if(hue < 153): 
                 new_image[x, y] = [0,0,0]
+            # else:
+            #     new_image[x, y] = [0, 0, 100]
             if(sat < 150):
-                new_image[x,y] = [0,0,0]
+                new_image[x, y] = [0,0,0]
+            # else:
+            #     new_image[x, y] = [0, 0, 100]
             
     cv2.imshow('formatted', new_image)
     cv2.waitKey(0)
-    return new_image
+    percentage = calculate_non_zero(new_image, image)
+    return new_image, percentage
 
 def get_dim(image):
     return image.shape[0], image.shape[1]
@@ -196,13 +233,31 @@ def fuzzy_blue(image):
             else:
                 new_image[x, y] = [0, 0, 0]
 
-            if(178 < sat < 255):
+            if(200 < sat < 255):
                 new_image[x, y] = hsv_image[x, y]
             else:
                 new_image[x, y] = [0, 0, 0]
-    cv2.imshow('Blue image', new_image)
+    cv2.imshow('Blue image', cv2.cvtColor(new_image, cv2.COLOR_HSV2BGR))
     cv2.waitKey(0)
-    return new_image
+    percentage_blue = calculate_non_zero(new_image, image)
+    return cv2.cvtColor(new_image, cv2.COLOR_HSV2BGR), percentage_blue
+
+def fuzzy_white(image):
+    # define range of white color in HSV
+    # change it according to your need !
+    hsv = bgr_to_hsv(image)
+    lower_white = np.array([0,0,0], dtype=np.uint8)
+    upper_white = np.array([0,0,255], dtype=np.uint8)
+
+    # Threshold the HSV image to get only white colors
+    mask = cv2.inRange(hsv, lower_white, upper_white)
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(image,image, mask= mask)
+
+    cv2.imshow('frame',image)
+    cv2.imshow('mask',mask)
+    cv2.imshow('res',res)
+    cv2.waitKey(0)
 
 def fuzzy_green(image):
     hsv_image = bgr_to_hsv(image)
@@ -223,6 +278,7 @@ def fuzzy_green(image):
                 new_image[x, y] = [0, 0, 0]
     cv2.imshow('Green image', new_image)
     cv2.waitKey(0)
+    percentage_green = calculate_non_zero(new_image, image)
     return new_image  
             
 
@@ -234,9 +290,10 @@ def main():
 
     img_name = sys.argv[1]
     image = get_input_image(img_name)
-    red = fuzzy_red(image)
-    cv2.imwrite('circle.png', red)
-    return 0
+    yellow_img, per = fuzzy_yellow(image)
+    cv2.imwrite('ye.png', yellow_img)
+    # find_yellow(image)
+
 
 
 if __name__ == '__main__':

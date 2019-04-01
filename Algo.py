@@ -6,7 +6,8 @@ from copy import deepcopy
 
 
 def preprocess(source_image, min_threshold=50, max_threshold=80):
-    gray = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)  # convert image into gray scale
+    bgr = cv2.cvtColor(source_image, cv2.COLOR_HSV2BGR)
+    gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)  # convert image into gray scale
     gaussian = cv2.GaussianBlur(gray, (5, 5), 0)  # apply gaussian blur
     canny = cv2.Canny(gaussian, min_threshold, max_threshold)
     return canny, gaussian, gray

@@ -2,9 +2,12 @@ import numpy as np
 import cv2
 
 def my_fn():
-    img = cv2.imread("/images/tes3.jpg", cv2.IMREAD_GRAYSCALE)
+    # img = cv2.imread("/images/tes3.jpg", cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread("ye.png")
+    hsv = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
+    img = cv2.cvtColor(hsv, cv2.COLOR_BGR2GRAY)
     _, threshold = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
-    _, contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
  
     font = cv2.FONT_HERSHEY_COMPLEX
  
@@ -32,8 +35,12 @@ def my_fn():
 
 def fn2():
 
-    img = cv2.imread('/images/tes3.jpg')
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # img = cv2.imread('/images/tes3.jpg')
+    # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    img = cv2.imread("ye.png")
+    hsv = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
+    gray = cv2.cvtColor(hsv, cv2.COLOR_BGR2GRAY)
 
     ret,thresh = cv2.threshold(gray,127,255,1)
 
@@ -62,4 +69,4 @@ def fn2():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-fn2()
+my_fn()
