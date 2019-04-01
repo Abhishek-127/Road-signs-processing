@@ -169,15 +169,16 @@ results = sorted(results, key=lambda r:r[0][1])
 count = 0
 for ((startX, startY, endX, endY), text) in results:
 	# display the text OCR'd by Tesseract based on input
-	if text == "STOP":
+	#print("Found:"+format(text))
+	if "STOP" in text:
 		print("Language: English")
-		print("Instruction: {}".format(text))
+		print("Instruction: STOP")
 		count = count + 1
-	elif text == "ALTO":
+	elif "A" in text and "L" in text and "T" in text and "O" in text:
 		print("Language: Spanish")
 		print("Instruction: STOP")
 		count = count + 1
-	elif text == "ARRET":
+	elif "A" in text and "R" in text and "E" in text and "T" in text:
 		print("Language: French")
 		print("Instruction: STOP")
 		count = count + 1
@@ -185,6 +186,11 @@ for ((startX, startY, endX, endY), text) in results:
 		print("Language: Numeric")
 		print("Speed Limit is " + text + " km/h")
 		count = count + 1
+	elif "SPEED" in text:
+		print("Language: English")
+		print("Speed Limit detected")
+	elif text == "":
+		count = 0
 
 	# strip out non-ASCII text so we can draw the text on the image
 	# using OpenCV, then draw the text and a bounding box surrounding
@@ -197,8 +203,10 @@ for ((startX, startY, endX, endY), text) in results:
 		cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
 
 	# show the output image
+	fileOutput = "A3/output" + text + ".png"
 	cv2.imshow("Text Detection", output)
+	cv2.imwrite(fileOutput, output)
 	cv2.waitKey(0)
 
 if count == 0:
-	print("Sign is informational. No text detected.")
+	print("No text detected.")
