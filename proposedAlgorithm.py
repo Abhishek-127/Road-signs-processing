@@ -9,7 +9,7 @@ def get_input_image(path_to_image):
     # image_clustering(image)
     # gabor_filter(image)
     # octagon(image)
-    # fuzzy_rules(image)
+    # fuzzy_red(image)
     # fuzzy_blue(image)
     # fuzzy_green(image)
     return image
@@ -158,7 +158,7 @@ def find_yellow(image):
 def bgr_to_hsv(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-def fuzzy_rules(image):
+def fuzzy_red(image):
     hsv_image = bgr_to_hsv(image)
     new_image = hsv_image.copy()
     height, width = get_dim(image)
@@ -178,6 +178,7 @@ def fuzzy_rules(image):
             
     cv2.imshow('formatted', new_image)
     cv2.waitKey(0)
+    return new_image
 
 def get_dim(image):
     return image.shape[0], image.shape[1]
@@ -233,4 +234,12 @@ def main():
 
     img_name = sys.argv[1]
     image = get_input_image(img_name)
-    
+    red = fuzzy_red(image)
+    cv2.imwrite('circle.png', red)
+    return 0
+
+
+if __name__ == '__main__':
+    main()
+
+

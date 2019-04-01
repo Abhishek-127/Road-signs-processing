@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
 
-def detect_shapes(image):
-    img = cv2.imread("speedLimit.jpeg", cv2.IMREAD_GRAYSCALE)
+def detect_shapes():
+    img = cv2.imread("circle.png", cv2.IMREAD_GRAYSCALE)
     _, threshold = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
     contours, _= cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -29,3 +29,6 @@ def detect_shapes(image):
     cv2.imshow("Threshold", threshold)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+detect_shapes()
