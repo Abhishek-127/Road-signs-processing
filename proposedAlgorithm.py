@@ -6,9 +6,35 @@ import math
 
 def get_input_image(path_to_image):
     image = cv2.imread(path_to_image)
-    image_clustering(image)
-    gabor_filter(image)
+    # image_clustering(image)
+    # gabor_filter(image)
+    # octagon(image)
+    # fuzzy_rules(image)
+    # fuzzy_blue(image)
+    # fuzzy_green(image)
     return image
+
+def octagon(image):
+
+    # img = cv2.imread(image, 1)
+    img = image
+    cv2.imshow('img1',img[:,:,0])
+
+    ret,thresh1 = cv2.threshold(img[:,:,0], 0, 255,cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    cv2.imshow('thresh1', thresh1)
+
+    contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    for cnt in contours:
+        approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
+        print (len(approx))
+        if len(approx)==8:
+            print ("octagon")
+            cv2.drawContours(img, [cnt], 0, (0, 255, 0), 6)
+
+    cv2.imshow('sign', img)       
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def image_clustering(image):
     clustered_image = image.copy()
@@ -135,9 +161,76 @@ def bgr_to_hsv(image):
 def fuzzy_rules(image):
     hsv_image = bgr_to_hsv(image)
     new_image = hsv_image.copy()
-    hue_channel = hsv_image[0]
-    saturation_channel = hsv_image[1]
+    height, width = get_dim(image)
+    cv2.imshow('hsv image', hsv_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
+    for x in range(0, height):
+        for y in range(0, width):
+            hue = hsv_image[x, y][0]
+            sat = hsv_image[x,y][1]
+            # 173
+            if(hue < 173): 
+                new_image[x, y] = [0,0,0]
+            if(sat < 150):
+                new_image[x,y] = [0,0,0]
+            
+    cv2.imshow('formatted', new_image)
+    cv2.waitKey(0)
 
+def get_dim(image):
+    return image.shape[0], image.shape[1]
 
-get_input_image('yield.jpg')
+def fuzzy_blue(image):
+    hsv_image = bgr_to_hsv(image)
+    new_image = hsv_image.copy()
+    height, width = get_dim(image)
+    for x in range(0, height):
+        for y in range(0, width):
+            hue = hsv_image[x, y][0]
+            sat = hsv_image[x, y][1]
+            if(118 < hue < 134):
+                new_image[x, y] = hsv_image[x,y]
+            else:
+                new_image[x, y] = [0, 0, 0]
+
+            if(178 < sat < 255):
+                new_image[x, y] = hsv_image[x, y]
+            else:
+                new_image[x, y] = [0, 0, 0]
+    cv2.imshow('Blue image', new_image)
+    cv2.waitKey(0)
+    return new_image
+
+def fuzzy_green(image):
+    hsv_image = bgr_to_hsv(image)
+    new_image = hsv_image.copy()
+    height, width = get_dim(image)
+    for x in range(0, height):
+        for y in range(0, width):
+            hue = hsv_image[x, y][0]
+            sat = hsv_image[x, y][1]
+            if(75 < hue < 91):
+                new_image[x, y] = hsv_image[x,y]
+            else:
+                new_image[x, y] = [0, 0, 0]
+
+            if(178 < sat < 255):
+                new_image[x, y] = hsv_image[x, y]
+            else:
+                new_image[x, y] = [0, 0, 0]
+    cv2.imshow('Green image', new_image)
+    cv2.waitKey(0)
+    return new_image  
+            
+
+def main():
+    if len(sys.argv) < 1:
+        print ('Not enough parameters')
+        print ('Usage:\nmorph_lines_detection.py < path_to_image >')
+        return -1
+
+    img_name = sys.argv[1]
+    image = get_input_image(img_name)
+    
