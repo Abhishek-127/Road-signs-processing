@@ -12,7 +12,7 @@ def get_input_image(path_to_image):
 
 def image_clustering(image):
     clustered_image = image.copy()
-    clustered_image = cv2.cvtColor(clustered_image, cv2.COLOR_BGR2GRAY)
+    # clustered_image = cv2.cvtColor(clustered_image, cv2.COLOR_BGR2LAB)
     Z = clustered_image.reshape((-1,3))
 
     # convert to np.float32
@@ -24,7 +24,19 @@ def image_clustering(image):
     ret,label,center = cv2.kmeans(Z,K,criteria,10,cv2.KMEANS_RANDOM_CENTERS)
 
     # Now convert back into uint8, and make original image
+    print(len(label))
+    print(len(center))
+
     center = np.uint8(center)
+    A = Z[label.ravel()==0]
+    B = Z[label.ravel()==1]
+    C = Z[label.ravel()==2]
+    # plt.scatter(A[:,0],A[:,1])
+    # plt.scatter(B[:,0],B[:,1],c = 'r')
+    # plt.scatter(center[:,0],center[:,1],s = 80,c = 'y', marker = 's')
+    # plt.xlabel('Height'),plt.ylabel('Weight')
+    # plt.show()
+
     res = center[label.flatten()]
     res2 = res.reshape((clustered_image.shape))
 
@@ -94,5 +106,38 @@ def gabor2(image):
     cv2.imshow('Abhishek', filtered)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+def calc_perimeter(image):
+    height = image.shape[0]
+    width = image.shape[1]
+    perimeter = (2*height) + (2*width)
+    return perimeter
+
+
+def find_yellow(image):
+    # the below is pairs of yellow and red respectively
+    hsv_color_pairs = (
+        (np.array([21, 100, 75]), np.array([25, 255, 255])),
+        (np.array([1, 75, 75]), np.array([9, 225, 225]))
+    )
+    # this code is in a for loop and loops over the above HSV color ranges
+    mask = cv2.inRange(hsv, colors[0], colors[1])
+    out = cv2.bitwise_and(im, im, mask=mask)
+    blur = cv2.blur(out, (5, 5), 0)
+    imgray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
+    ret, thresh = cv2.threshold(imgray, 0, 255, cv2.THRESH_OTSU)
+
+    heir, contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+def bgr_to_hsv(image):
+    return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+def fuzzy_rules(image):
+    hsv_image = bgr_to_hsv(image)
+    new_image = hsv_image.copy()
+    hue_channel = hsv_image[0]
+    saturation_channel = hsv_image[1]
+
+
 
 get_input_image('yield.jpg')
