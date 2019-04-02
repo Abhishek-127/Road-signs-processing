@@ -17,7 +17,7 @@ args = vars(ap.parse_args())
 # load the image and resize it to a smaller factor so that
 # the shapes can be approximated better
 image = cv2.imread(args["image"])
-ori = cv2.imread('./images/red6.JPG')
+ori = cv2.imread('./images/Green.jpg')
 resized = imutils.resize(image, width=300)
 ratio = image.shape[0] / float(resized.shape[0])
 
@@ -50,8 +50,8 @@ for c in cnts:
 	c = c.astype("float")
 	c *= ratio
 	c = c.astype("int")
-	cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-	cv2.drawContours(ori, [c], -1, (0, 255, 0), 2)
+	cv2.drawContours(image, [c], -1, (255, 0, 0), 2)
+	cv2.drawContours(ori, [c], -1, (255, 0, 0), 2)
 	# cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
 	# 	0.5, (255, 255, 255), 2)
 

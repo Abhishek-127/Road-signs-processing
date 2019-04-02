@@ -290,7 +290,7 @@ def main():
 
     img_name = sys.argv[1]
     image = get_input_image(img_name)
-    yellow_img, per = fuzzy_yellow(image)
+    yellow_img= fuzzy_green(image)
     cv2.imwrite('ye.png', yellow_img)
     # find_yellow(image)
 
