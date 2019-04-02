@@ -1,4 +1,4 @@
-echo "You are beautiful, give us hundred"
+#$echo "You are beautiful, give us hundred"
 
 # make run path="blah blah"
 run:

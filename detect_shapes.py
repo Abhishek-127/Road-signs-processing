@@ -17,7 +17,7 @@ args = vars(ap.parse_args())
 # load the image and resize it to a smaller factor so that
 # the shapes can be approximated better
 image = cv2.imread(args["image"])
-ori = cv2.imread('./images/Green.jpg')
+ori = cv2.imread('./images/tes1.png')
 resized = imutils.resize(image, width=300)
 ratio = image.shape[0] / float(resized.shape[0])
 
@@ -56,8 +56,8 @@ for c in cnts:
 	# 	0.5, (255, 255, 255), 2)
 
 	# show the output image
-	cv2.imshow("Image", image)
-	cv2.imshow("ori", ori)
+	# cv2.imshow("Image", image)
+	# cv2.imshow("ori", ori)
 	cv2.imwrite('pre.png', image)
 	cv2.imwrite('process.png', ori)
-	cv2.waitKey(0)
+	# cv2.waitKey(0)
