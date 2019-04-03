@@ -155,7 +155,7 @@ for (startX, startY, endX, endY) in boxes:
 	# (3) an OEM value, in this case, 7 which implies that we are
 	# treating the ROI as a single line of text
 	config = ("-l eng --oem 1 --psm 7")
-	pytesseract.pytesseract.tesseract_cmd = r'C:\Python27\A3\Tesseract-OCR\tesseract.exe'
+	pytesseract.pytesseract.tesseract_cmd = r'\Tesseract-OCR\tesseract.exe'
 	text = pytesseract.image_to_string(roi, config=config)
 
 	# add the bounding box coordinates and OCR'd text to the list
