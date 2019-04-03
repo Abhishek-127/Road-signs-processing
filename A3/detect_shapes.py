@@ -6,18 +6,21 @@ from pyimagesearch.shapedetector import ShapeDetector
 import argparse
 import imutils
 import cv2
+import sys
 
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True,
 	help="path to the input image")
+ap.add_argument("-orig", "--original", required=True,
+	help="path to the original image")
 args = vars(ap.parse_args())
 
 # load the image and resize it to a smaller factor so that
 # the shapes can be approximated better
 image = cv2.imread(args["image"])
-ori = cv2.imread('./images/tes1.png')
+ori = cv2.imread(args["original"])
 resized = imutils.resize(image, width=300)
 ratio = image.shape[0] / float(resized.shape[0])
 
@@ -56,8 +59,8 @@ for c in cnts:
 	# 	0.5, (255, 255, 255), 2)
 
 	# show the output image
-	cv2.imshow("Image", image)
-	cv2.imshow("ori", ori)
-	cv2.imwrite('pre.png', image)
-	cv2.imwrite('process.png', ori)
+	#cv2.imshow("Image", image)
+	#cv2.imshow("ori", ori)
+	cv2.imwrite('outputs/pre.png', image)
+	cv2.imwrite('outputs/process.png', ori)
 	# cv2.waitKey(0)

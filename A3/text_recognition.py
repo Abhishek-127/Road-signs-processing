@@ -155,7 +155,7 @@ for (startX, startY, endX, endY) in boxes:
 	# (3) an OEM value, in this case, 7 which implies that we are
 	# treating the ROI as a single line of text
 	config = ("-l eng --oem 1 --psm 7")
-	pytesseract.pytesseract.tesseract_cmd = r'\Tesseract-OCR\tesseract.exe'
+	pytesseract.pytesseract.tesseract_cmd = r'C:\Python27\A3\Tesseract-OCR\tesseract.exe'
 	text = pytesseract.image_to_string(roi, config=config)
 
 	# add the bounding box coordinates and OCR'd text to the list
@@ -169,26 +169,32 @@ results = sorted(results, key=lambda r:r[0][1])
 count = 0
 for ((startX, startY, endX, endY), text) in results:
 	# display the text OCR'd by Tesseract based on input
-	#print("Found:"+format(text))
-	if "STOP" in text:
+	#print("Found: {}".format(text))
+	if "S" in text and "T" in text and "O" in text and "P" in text:
 		print("Language: English")
-		print("Instruction: STOP")
+		print("Instruction: STOP\n")
+		count = count + 1
+	elif "E" in text and "X" in text and "I" in text and "T" in text:
+		print("Language: English")
+		print("Instruction: EXIT\n")
 		count = count + 1
 	elif "A" in text and "L" in text and "T" in text and "O" in text:
 		print("Language: Spanish")
-		print("Instruction: STOP")
+		print("Instruction: ALTO")
+		print("Translation: STOP\n")
 		count = count + 1
 	elif "A" in text and "R" in text and "E" in text and "T" in text:
 		print("Language: French")
-		print("Instruction: STOP")
+		print("Instruction: ARRET")
+		print("Translation: STOP\n")
 		count = count + 1
 	elif text.isdigit() == True:
 		print("Language: Numeric")
-		print("Speed Limit is " + text + " km/h")
+		print("Speed Limit is " + text + " km/h\n")
 		count = count + 1
-	elif "SPEED" in text:
+	elif "S" in text and "P" in text and "E" in text and "D" in text:
 		print("Language: English")
-		print("Speed Limit detected")
+		print("Instruction: Speed Limit\n")
 	elif text == "":
 		count = 0
 
@@ -203,10 +209,7 @@ for ((startX, startY, endX, endY), text) in results:
 		cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
 
 	# show the output image
-	fileOutput = "A3/output" + text + ".png"
+	fileOutput = "outputs/output" + text + ".png"
 	cv2.imshow("Text Detection", output)
 	cv2.imwrite(fileOutput, output)
 	cv2.waitKey(0)
-
-if count == 0:
-	print("No text detected.")
