@@ -53,14 +53,15 @@ for c in cnts:
 	c = c.astype("float")
 	c *= ratio
 	c = c.astype("int")
-	cv2.drawContours(image, [c], -1, (255, 0, 0), 2)
-	cv2.drawContours(ori, [c], -1, (255, 0, 0), 2)
+	cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
+	cv2.drawContours(ori, [c], -1, (0, 255, 0), 2)
 	# cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
 	# 	0.5, (255, 255, 255), 2)
 
 	# show the output image
 	#cv2.imshow("Image", image)
 	#cv2.imshow("ori", ori)
-	cv2.imwrite('outputs/pre.png', image)
-	cv2.imwrite('outputs/process.png', ori)
+	#cv2.waitKey(0)
+	cv2.imwrite('A3/outputs/pre.png', image)
+	cv2.imwrite('A3/outputs/process.png', ori)
 	# cv2.waitKey(0)

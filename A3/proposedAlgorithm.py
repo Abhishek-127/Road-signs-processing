@@ -286,19 +286,19 @@ def main():
     # print("Yellow" + str(yellow_per))
 
     if red_per > blue_per and red_per > yellow_per and red_per > green_per:
-        cv2.imwrite('outputs/ye.png', red)
+        cv2.imwrite('A3/outputs/ye.png', red)
         cv2.imshow('Output image', red)
         cv2.waitKey(0)
     elif blue_per > red_per and blue_per > yellow_per and blue_per > green_per:
-        cv2.imwrite('outputs/ye.png', blue)
+        cv2.imwrite('A3/outputs/ye.png', blue)
         cv2.imshow('Output image', blue)
         cv2.waitKey(0)
     elif yellow_per > red_per and yellow_per > blue_per and yellow_per > green_per:
-        cv2.imwrite('outputs/ye.png', yellow)
+        cv2.imwrite('A3/outputs/ye.png', yellow)
         cv2.imshow('Output image', yellow)
         cv2.waitKey(0)
     elif green_per > red_per and green_per > blue_per and green_per > yellow_per:
-        cv2.imwrite('outputs/ye.png', green)
+        cv2.imwrite('A3/outputs/ye.png', green)
         cv2.imshow('Output image', green)
         cv2.waitKey(0)
 

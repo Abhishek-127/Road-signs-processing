@@ -3,7 +3,6 @@ import numpy as np
 import sys
 
 video_file = sys.argv[1]
-#video_file = "yield.mp4"
 video = cv2.VideoCapture(video_file)
 i = 0
 while True:
@@ -11,11 +10,11 @@ while True:
     if not grabbed:
         break
     output = frame
-    print(i)
+    #print(i)
     i = i+1
     cv2.imshow("output", output)
     cv2.waitKey(1)
-    cv2.imwrite('video/frame' + str(i) + '.png', output)
+    cv2.imwrite('A3/video/frame' + str(i) + '.png', output)
     # if cv2.waitKey(1) &amp; 0xFF == ord('q'):
     #     break
  

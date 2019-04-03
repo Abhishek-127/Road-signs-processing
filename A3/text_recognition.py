@@ -69,6 +69,7 @@ def decode_predictions(scores, geometry):
 	# return a tuple of the bounding boxes and associated confidences
 	return (rects, confidences)
 
+
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", type=str,
@@ -167,6 +168,7 @@ results = sorted(results, key=lambda r:r[0][1])
 
 # loop over the results
 count = 0
+
 for ((startX, startY, endX, endY), text) in results:
 	# display the text OCR'd by Tesseract based on input
 	#print("Found: {}".format(text))
